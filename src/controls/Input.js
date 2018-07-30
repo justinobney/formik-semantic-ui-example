@@ -18,7 +18,7 @@ class FormikInput extends Component {
           const error = form.touched[name] && form.errors[name];
           return (
             <Form.Field error={!!error} {...fieldProps}>
-              <label htmlFor={this.id}>{label}</label>
+              {!!label && <label htmlFor={this.id}>{label}</label>}
               <Input
                 id={this.id}
                 name={name}

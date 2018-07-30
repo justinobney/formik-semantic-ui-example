@@ -24,9 +24,11 @@ class FormikDropdown extends Component {
           const error = form.touched[name] && form.errors[name];
           return (
             <Form.Field error={!!error} {...fieldProps}>
-              <label htmlFor={this.id} onClick={() => this._dropdown.open()}>
-                {label}
-              </label>
+              {!!label && (
+                <label htmlFor={this.id} onClick={() => this._dropdown.open()}>
+                  {label}
+                </label>
+              )}
               <Dropdown
                 ref={el => (this._dropdown = el)}
                 id={this.id}
