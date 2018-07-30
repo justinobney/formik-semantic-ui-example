@@ -5,8 +5,8 @@ body {
 
 .SingleDatePicker,
 .SingleDatePicker > div,
-.SingleDatePicker > div > div,
-.SingleDatePicker > div > div > div {
+.SingleDatePickerInput,
+.SingleDatePickerInput > div {
   display: flex;
   flex: 1;
   width: 100%;

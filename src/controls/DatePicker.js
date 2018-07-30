@@ -77,4 +77,4 @@ class FormikInput extends Component {
   }
 }
 
-export default FormikInput;
+export default FormikDatePicker;
