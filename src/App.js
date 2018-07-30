@@ -1,20 +1,27 @@
 import React, { Component } from "react";
+import { Button, Container, Form, Header, Segment } from "semantic-ui-react";
+import { Formik } from "formik";
+
 import {
-  Segment,
-  Container,
-  Header,
-  Form,
-  Button,
-  Label,
-  Input
-} from "semantic-ui-react";
-import { Formik, Field } from "formik";
+  Input,
+  Checkbox,
+  DatePicker,
+  Dropdown,
+  FileUpload,
+  TextArea
+} from "./controls/index";
 
 class App extends Component {
   _handleSubmit = (values, formikApi) => {
-    formikApi.setFieldError("email", "This email can not be used.");
-    formikApi.setSubmitting(false);
+    console.log(values);
+    setTimeout(() => {
+      Object.keys(values).forEach(key => {
+        formikApi.setFieldError(key, "Some Error");
+      });
+      formikApi.setSubmitting(false);
+    }, 1000);
   };
+
   render() {
     return (
       <Container style={{ paddingTop: 50 }}>
@@ -23,90 +30,76 @@ class App extends Component {
         </Header>
 
         <Segment attached>
-          <LoginForm
+          <Formik
             initialValues={{
-              email: "",
-              password: ""
+              emailAddress: "",
+              firstName: "",
+              lastName: "",
+              gender: "",
+              ssn: "",
+              notes: "",
+              dob: "",
+              fileUrl: "",
+              likesCake: false
             }}
             onSubmit={this._handleSubmit}
+            render={this._renderForm}
           />
         </Segment>
       </Container>
     );
   }
-}
 
-class LoginForm extends Component {
-  render() {
-    return (
-      <Formik
-        initialValues={this.props.initialValues}
-        onSubmit={this.props.onSubmit}
-        render={({ handleSubmit, isSubmitting }) => (
-          <Form onSubmit={handleSubmit}>
-            <FormikInput label="Email" name="email" />
-            <FormikInput
-              label="Password"
-              name="password"
-              inputProps={{
-                type: "password"
-              }}
-            />
-            <Button type="submit" loading={isSubmitting}>
-              Submit
-            </Button>
-          </Form>
-        )}
-      />
-    );
-  }
-}
+  _renderForm = ({ handleSubmit, isSubmitting }) => (
+    <Form onSubmit={handleSubmit}>
+      <Input label="Email" name="emailAddress" />
 
-let fieldCounter = 0;
-class FormikInput extends React.Component {
-  constructor(props) {
-    super(props);
-    this.id = this.props.id || `field_${fieldCounter++}`;
-  }
+      <Form.Group>
+        <Input
+          label="First Name"
+          name="firstName"
+          fieldProps={{ width: "8" }}
+        />
+        <Input label="Last Name" name="lastName" fieldProps={{ width: "8" }} />
+      </Form.Group>
 
-  render() {
-    const { name, label, inputProps = {} } = this.props;
-    return (
-      <Field
-        name={name}
-        render={({ field, form }) => {
-          const error = form.touched[name] && form.errors[name];
-          return (
-            <Form.Field error={!!error}>
-              <label htmlFor={this.id}>{label}</label>
-              <Input
-                id={this.id}
-                name={name}
-                value={field.value}
-                onChange={(e, { name, value }) => {
-                  form.setFieldValue(name, value, false);
-                }}
-                {...inputProps}
-              />
-              {form.errors[name] &&
-                form.touched[name] && (
-                  <span
-                    style={{
-                      display: "block",
-                      margin: ".28571429rem 0",
-                      color: "rgb(159, 58, 56)",
-                      fontSize: ".92857143em"
-                    }}
-                  >
-                    {form.errors[name]}
-                  </span>
-                )}
-            </Form.Field>
-          );
-        }}
-      />
-    );
-  }
+      <Form.Group>
+        <DatePicker label="D.O.B." name="dob" fieldProps={{ width: "8" }} />
+      </Form.Group>
+
+      <Form.Group>
+        <Input
+          label="SSN"
+          name="ssn"
+          inputProps={{
+            type: "password"
+          }}
+          fieldProps={{ width: "8" }}
+        />
+        <Dropdown
+          label="Gender"
+          name="gender"
+          options={[
+            { text: "Female", value: "F" },
+            { text: "Male", value: "M" }
+          ]}
+          fieldProps={{ width: "8" }}
+        />
+      </Form.Group>
+
+      <TextArea label="Notes" name="notes" />
+      <Checkbox label="I like cake" name="likesCake" />
+
+      <FileUpload label="Profile Picture Upload" name="fileUrl" />
+
+      <Button type="submit" loading={isSubmitting} primary>
+        Submit
+      </Button>
+      <Button type="button" basic>
+        Cancel
+      </Button>
+    </Form>
+  );
 }
 
 export default App;

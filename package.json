@@ -4,8 +4,12 @@
   "private": true,
   "dependencies": {
     "formik": "^1.0.2",
+    "moment": "^2.22.2",
+    "prop-types": "^15.6.2",
     "react": "^16.4.1",
+    "react-dates": "^17.1.1",
     "react-dom": "^16.4.1",
+    "react-dropzone": "^4.2.13",
     "react-scripts": "1.1.4",
     "semantic-ui-css": "^2.3.3",
     "semantic-ui-react": "^0.82.1"

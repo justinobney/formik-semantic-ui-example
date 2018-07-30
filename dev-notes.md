@@ -3,13 +3,13 @@
 ## Input Types
 
 - Input
-  - Number
-    - NumberStepper
-  - DateTime
-    - DateOnly
-    - TimeOnly
-  - Dropdown
-  - Combobox
+  - text/email/number/password
+- NumberStepper ?
+- DateTime
+  - DateOnly
+  - TimeOnly
+- Dropdown
+- Combobox
 - TextArea
 - Checkbox
 - RadioButtons
