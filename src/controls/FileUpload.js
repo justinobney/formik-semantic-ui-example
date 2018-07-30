@@ -26,12 +26,32 @@ class FileUpload extends Component {
     this.id = props.id || `field_fileupload_${fieldCounter++}`;
   }
 
+  _onDrop = form => {
+    const { name } = this.props;
+    this.setState({ uploading: true, progress: 0 }, () => {
+      this._counter = setInterval(() => {
+        this.setState(
+          state => ({
+            progress: state.progress + 10
+          }),
+          () => {
+            if (this.state.progress >= 100) {
+              clearInterval(this._counter);
+              form.setFieldValue(name, "url://some_url", false);
+              this.setState({ uploading: false });
+            }
+          }
+        );
+      }, 150);
+    });
+  };
+
   render() {
-    const { name, label, fieldProps = {} } = this.props;
+    const { name, label, fieldProps = {}, inputProps = {} } = this.props;
     return (
       <Field
         name={name}
-        render={({ form }) => {
+        render={({ field, form }) => {
           const error = form.touched[name] && form.errors[name];
           return (
             <Form.Field error={!!error} {...fieldProps}>
@@ -39,24 +59,12 @@ class FileUpload extends Component {
               <Dropzone
                 accept="image/png"
                 style={emptyStyle}
+                {...inputProps}
                 multiple={false}
-                onDrop={() => {
-                  this.setState({ uploading: true, progress: 0 }, () => {
-                    this._counter = setInterval(() => {
-                      this.setState(
-                        state => ({
-                          progress: state.progress + 10
-                        }),
-                        () => {
-                          if (this.state.progress >= 100) {
-                            clearInterval(this._counter);
-                            form.setFieldValue(name, "url://some_url", false);
-                            this.setState({ uploading: false });
-                          }
-                        }
-                      );
-                    }, 150);
-                  });
+                onDrop={acceptedFiles => {
+                  if (acceptedFiles.length) {
+                    this._onDrop(form);
+                  }
                 }}
               >
                 {({ isDragActive, isDragReject, acceptedFiles }) => {
@@ -69,16 +77,18 @@ class FileUpload extends Component {
                   };
                   const { uploading, progress } = this.state;
                   const file = [...acceptedFiles].pop();
-                  const color =
-                    !!file && !uploading
-                      ? "green"
-                      : isDragActive || uploading
-                        ? "blue"
-                        : "grey";
+                  const hasFile = !!file && !uploading && field.value;
+                  const color = hasFile
+                    ? "green"
+                    : isDragActive || uploading
+                      ? "blue"
+                      : "grey";
+
+                  const showProgress = !!progress && (hasFile || uploading);
 
                   return (
                     <Segment style={wrapperStyle}>
-                      {!!progress && (
+                      {showProgress && (
                         <Progress
                           percent={progress}
                           attached="top"
@@ -94,7 +104,7 @@ class FileUpload extends Component {
                       >
                         <Icon name="cloud upload" color={color} />
                         <Header.Content>
-                          {file ? (
+                          {file && (hasFile || uploading) ? (
                             <React.Fragment>
                               {file.name} - {file.size} bytes
                               <Header.Subheader>

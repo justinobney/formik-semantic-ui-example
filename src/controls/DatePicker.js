@@ -16,7 +16,7 @@ const getDate = date => {
 };
 
 let fieldCounter = 0;
-class FormikInput extends Component {
+class FormikDatePicker extends Component {
   state = {
     focused: false
   };
@@ -54,6 +54,7 @@ class FormikInput extends Component {
                 readOnly
                 enableOutsideDays
                 isOutsideRange={() => false}
+                numberOfMonths={1}
                 {...inputProps}
               />
               {form.errors[name] &&
@@ -76,5 +77,48 @@ class FormikInput extends Component {
     );
   }
 }
+
+const YEARS = Array.from({ length: 100 })
+  .map((_, idx) => moment().year() - (idx + 1))
+  .reverse()
+  .concat(moment().year());
+
+const YearMonthSelector = ({
+  month,
+  onMonthSelect,
+  onYearSelect,
+  years = YEARS
+}) => (
+  <div style={{ display: "flex", justifyContent: "center" }}>
+    <div>
+      <select
+        value={month.month()}
+        onChange={e => {
+          onMonthSelect(month, e.target.value);
+        }}
+      >
+        {moment
+          .months()
+          .map((label, value) => <option value={value}>{label}</option>)}
+      </select>
+    </div>
+    <div>
+      <select
+        value={month.year()}
+        onChange={e => {
+          onYearSelect(month, e.target.value);
+        }}
+      >
+        {years.map(year => (
+          <option key={year} value={year}>
+            {year}
+          </option>
+        ))}
+      </select>
+    </div>
+  </div>
+);
+
+FormikDatePicker.YearMonthSelector = YearMonthSelector;
 
 export default FormikDatePicker;

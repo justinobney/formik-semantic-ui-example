@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Button, Container, Form, Header, Segment } from "semantic-ui-react";
 import { Formik } from "formik";
+import moment from "moment";
 
 import {
   Input,
@@ -50,7 +51,7 @@ class App extends Component {
     );
   }
 
-  _renderForm = ({ handleSubmit, isSubmitting }) => (
+  _renderForm = ({ handleSubmit, handleReset, isSubmitting }) => (
     <Form onSubmit={handleSubmit}>
       <Input label="Email" name="emailAddress" />
 
@@ -64,7 +65,18 @@ class App extends Component {
       </Form.Group>
 
       <Form.Group>
-        <DatePicker label="D.O.B." name="dob" fieldProps={{ width: "8" }} />
+        <DatePicker
+          label="D.O.B."
+          name="dob"
+          fieldProps={{ width: "8" }}
+          inputProps={{
+            showDefaultInputIcon: false,
+            isOutsideRange: day => !moment(day).isSameOrBefore(moment()),
+            renderMonthElement: props => (
+              <DatePicker.YearMonthSelector {...props} />
+            )
+          }}
+        />
       </Form.Group>
 
       <Form.Group>
@@ -95,7 +107,7 @@ class App extends Component {
       <Button type="submit" loading={isSubmitting} primary>
         Submit
       </Button>
-      <Button type="button" basic>
+      <Button type="button" basic onClick={handleReset}>
         Cancel
       </Button>
     </Form>
