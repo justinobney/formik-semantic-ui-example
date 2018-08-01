@@ -37,7 +37,7 @@ class FileUpload extends Component {
           () => {
             if (this.state.progress >= 100) {
               clearInterval(this._counter);
-              form.setFieldValue(name, "url://some_url", false);
+              form.setFieldValue(name, "url://some_url", true);
               this.setState({ uploading: false });
             }
           }

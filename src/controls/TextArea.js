@@ -24,7 +24,7 @@ class FormikTextArea extends Component {
                 name={name}
                 value={field.value}
                 onChange={(e, { name, value }) => {
-                  form.setFieldValue(name, value, false);
+                  form.setFieldValue(name, value, true);
                 }}
                 rows={4}
                 {...inputProps}

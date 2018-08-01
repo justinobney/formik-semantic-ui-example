@@ -34,14 +34,14 @@ class FormikDropdown extends Component {
                 id={this.id}
                 name={name}
                 options={options}
-                value={field.value}
-                onChange={(e, { name, value }) => {
-                  form.setFieldValue(name, value, false);
-                }}
                 selectOnBlur={false}
                 selectOnNavigation={false}
                 selection
                 {...inputProps}
+                value={field.value}
+                onChange={(e, { name, value }) => {
+                  form.setFieldValue(name, value, true);
+                }}
               />
               {form.errors[name] &&
                 form.touched[name] && (

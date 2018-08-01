@@ -23,7 +23,7 @@ class FormikDatePicker extends Component {
 
   constructor(props) {
     super(props);
-    this.id = props.id || `field_datepicker_${fieldCounter++}`;
+    this.id = props.id || `field_datepicker_alt_${fieldCounter++}`;
   }
 
   render() {
@@ -38,15 +38,6 @@ class FormikDatePicker extends Component {
               {!!label && <label htmlFor={this.id}>{label}</label>}
               <SingleDatePicker
                 id={this.id}
-                date={getDate(field.value)}
-                onDateChange={date => {
-                  form.setFieldValue(
-                    name,
-                    date ? date.toDate().toISOString() : date,
-                    false
-                  );
-                }}
-                showDefaultInputIcon
                 inputIconPosition="after"
                 focused={this.state.focused}
                 onFocusChange={({ focused }) => this.setState({ focused })}
@@ -56,6 +47,14 @@ class FormikDatePicker extends Component {
                 isOutsideRange={() => false}
                 numberOfMonths={1}
                 {...inputProps}
+                date={getDate(field.value)}
+                onDateChange={date => {
+                  form.setFieldValue(
+                    name,
+                    date ? date.toDate().toISOString() : date,
+                    true
+                  );
+                }}
               />
               {form.errors[name] &&
                 form.touched[name] && (
@@ -97,9 +96,11 @@ const YearMonthSelector = ({
           onMonthSelect(month, e.target.value);
         }}
       >
-        {moment
-          .months()
-          .map((label, value) => <option value={value}>{label}</option>)}
+        {moment.months().map((label, value) => (
+          <option value={value} key={value}>
+            {label}
+          </option>
+        ))}
       </select>
     </div>
     <div>
